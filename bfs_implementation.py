@@ -37,9 +37,22 @@ G.nodes["J1"]['pos']=(400,400)
 G.nodes["Mada"]['pos']=(500,400)
 #store all positions in a variable
 node_pos = nx.get_node_attributes(G,'pos')
+#call BFS to return set of all possible routes to the goal
+route_bfs = BfsTraverser()
+routes = route_bfs.BFS(G,"SportsComplex","ParkingLot")
+print(route_bfs.visited)
+route_list = route_bfs.visited
+#color the nodes in the route_bfs
+node_col = ['darkturquoise' if not node in route_list else 'peru' for node in G.nodes()]
+peru_colored_edges = list(zip(route_list,route_list[1:]))
+#color the edges as well
+#print(peru_colored_edges)
+edge_col = ['darkturquoise' if not edge in peru_colored_edges else 'peru' for edge in G.edges()]
 arc_weight=nx.get_edge_attributes(G,'weight')
-pos = nx.spring_layout(G, k=0.5, iterations=20)
-nx.draw_networkx(G, node_pos,with_labels = True, node_color= 'red', node_size=1500,font_size=6)
+nx.draw_networkx(G, node_pos,node_color= node_col, node_size=450)
+nx.draw_networkx_edges(G, node_pos,width=2,edge_color= edge_col)
+#nx.draw_networkx_edge_labels(G, node_pos,edge_color= edge_col, edge_labels=arc_weight)
+
 nx.draw_networkx_edge_labels(G, node_pos, edge_labels=arc_weight)
 plt.axis('off')
 plt.show()
